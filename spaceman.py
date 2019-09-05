@@ -62,6 +62,15 @@ def get_guessed_word(secret_word, letters_guessed):
 
     pass
 
+def play_once_more():
+    yes_or_no = input("Do you want to play another time y/n:  ")
+    if 'y' in yes_or_no:
+        return True
+    else:
+        return False
+
+
+
 
 def is_guess_in_word(guess, secret_word):
 
@@ -98,12 +107,22 @@ def spaceman(secret_word):
     print('The secret word is {} letters long '.format(len(secret_word)))
     
     #TODO: Ask the player to guess one letter per round and check that it is only one letter
-    print('You have {} many guesses left. Guess one letter per round '.format(incorrect_guess))
+    # get user input
+    guess = input('please enter a letter: ')
 
+    if len(guess) != 1:
+        return ('please input one letter at a time')
+    else:
+        pass 
+
+    print('You have {} many guesses left. Guess one letter per round '.format(incorrect_guess))
     
+
     #TODO: Check if the guessed letter is in the secret or not and give the player feedback
     
     #TODO: show the guessed word so far
+    print('You have {} many guesses left. Guess one letter per round '.format(incorrect_guess))
+
 
     #TODO: check if the game has been won or lost
 
@@ -115,3 +134,4 @@ def spaceman(secret_word):
 #These function calls will start the game
 secret_word = load_word()
 print(spaceman(secret_word))
+print(play_once_more)
