@@ -10,7 +10,7 @@ def load_word():
            string: The secret word to be used in the spaceman guessing game
     '''
     f = open('wordstext.txt', 'r')
-    words_list = f.readlines()
+    words_list = f.read().split(' ')
     f.close()
 
     secret_word = random.choice(words_list)
@@ -35,6 +35,14 @@ def is_word_guessed(secret_word, letters_guessed):
     pass
  
 def get_guessed_word(secret_word, letters_guessed):
+    '''
+    A function that is used to get a string showing the letters guessed so far in the secret word and underscores for letters that have not been guessed yet.
+    Args: 
+        secret_word (string): the random word the user is trying to guess.
+        letters_guessed (list of strings): list of letters that have been guessed so far.
+    Returns: 
+        string: letters and underscores.  For letters in the word that the user has guessed correctly, the string should contain the letter at the correct position.  For letters in the word that the user has not yet guessed, shown an _ (underscore) instead.
+    '''
     arr = []
 
     for letter in secret_word:
@@ -85,7 +93,6 @@ def spaceman(secret_word):
     Args:
       secret_word (string): the secret word to guess.
     '''
-    print("---------------\n")
 
 
     guessed_word = " "
@@ -96,7 +103,7 @@ def spaceman(secret_word):
     incorrect_guess = len(secret_word)
 
     os.system('clear game')
-    print('Enjoy the game of Spaceman')
+    print('Welcome and enjoy a game Spaceman in the Terminal')
     print('The secret word contains: {} letters'.format(len(secret_word)))
     print('You have {} incorrect guesses left, please enter one letter per round'.format(
         incorrect_guess))
@@ -134,7 +141,7 @@ def spaceman(secret_word):
 
             guessed_word = get_guessed_word(secret_word, correct_guessed)
 
-            print('guessed words so far: {} '.format(guessed_word))
+            print('guessed letters so far: {} '.format(guessed_word))
             print('You have not guessed these letters yet: {} '.format(remaining_letters))
             break
 
