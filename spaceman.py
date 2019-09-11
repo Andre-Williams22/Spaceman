@@ -135,7 +135,7 @@ def spaceman(secret_word):
     if is_palindrome(secret_word):
         print("Hint: The word is a palindrome")
     else:
-        print("Hint: The word is not a panindrome")
+        print("Hint: The word is not a palindrome")
     print('You have {} incorrect guesses left, please enter one letter per round'.format(
         incorrect_guesses))
 
