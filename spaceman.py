@@ -1,7 +1,7 @@
 import random
-
 import os
-
+import re
+from colorama import Fore, Back, Style
 
 def load_word():
     '''
@@ -18,11 +18,6 @@ def load_word():
     return secret_word
 
 
-# Worked together with Christopher Francisco to make this
-#
-# Please give me / him feedback on this if there is a more efficent way to do it.  He stores the list in a local variable
-# and then just filters through that list instead of the entire file every time, which I assume is more efficent than the
-# the way that I do it here.  But we would love to learn more if there is a cleaner way to do this.  Thank you!!
 def get_new_word(current_word):
     # Open the file again as we are going to get a new word from the list
     with open('wordstext.txt', 'r') as f:
@@ -74,13 +69,13 @@ def get_guessed_word(secret_word, letters_guessed):
         string: letters and underscores.  For letters in the word that the user has guessed correctly, the string should contain the letter at the correct position.  For letters in the word that the user has not yet guessed, shown an _ (underscore) instead.
     '''
 
-    ret = []
+    tell = []
     for letter in secret_word:
         if letter in letters_guessed:
-            ret.append(letter)
+            tell.append(letter)
         else:
-            ret.append('_')
-    return ''.join(ret)
+            tell.append('_')
+    return tell
 
 
 def is_guess_in_word(guess, secret_word):
@@ -92,12 +87,13 @@ def is_guess_in_word(guess, secret_word):
     Returns:
         bool: True if the guess is in the secret_word, False otherwise
     '''
-    # for letter in secret_word:
-    #     if letter == guess:
-    #         return True
-
-    # return False
-    return [x for x in guess if x in secret_word]
+    for letter in secret_word:
+        if letter == guess:
+              return True
+        else:
+            return False
+     
+   # return [x for x in guess if x in secret_word]
 
 
 def play_again():
@@ -109,7 +105,6 @@ def play_again():
         os.system('clear')
         return False
 
-# Helper funcs
 
 
 def is_palindrome(s):
@@ -118,105 +113,45 @@ def is_palindrome(s):
     return False
 
 
+
 def spaceman(secret_word):
-    '''
-    A function that controls the game of spaceman. Will start spaceman in the command line.
-    Args:
-      secret_word (string): the secret word to guess.
-    '''
+    guessCounter = 7
 
-    # Set the amount of incorrect guesses available to the length of the secret word
-    incorrect_guesses = len(secret_word)
-
-    # Welcome the user to spaceman and give them some info on the game they are going to be playing.  Also clear console :)
-    os.system('clear')
-    print('Welcome to spaceman!')
-    print('The secret word contains: {} letters'.format(len(secret_word)))
-    if is_palindrome(secret_word):
-        print("Hint: The word is a palindrome")
-    else:
-        print("Hint: The word is not a palindrome")
-    print('You have {} incorrect guesses left, please enter one letter per round'.format(
-        incorrect_guesses))
-
-    # Placeholders for use later in the program
-    correct_guesses = []
-    unused_letters = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j',
-                      'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't',
-                      'u', 'v', 'w', 'x', 'y', 'z']
-
-    # Main game functionality
     while True:
-        # Print to make it easier to read where you are in the program
-        print('------------------------------ \n')
+        print('------------------------------------------')
+        print(Fore.MAGENTA + 'Guess the Spaceman\'s word!' + Fore.RESET)
+        print('\nCorrect letters: ')
+        # If a letter is in correct_list it will replace the spot with the letter (i).
+        for i in secret_word:
+            if i in correct_list:
+                # end=' ' Appends a space after the print statement
+                print(i, end=' ')
+            # If there isn't a correct letter it will print '_' in position of the secret_word
+            else:
+                print('_', end=' ')
+        print('\n\nIncorrect letters: ')
+        for i in incorrect_list:
+            print(i, end=' ')
 
-        # Check to see if they have won the game before doing anything else
-        if is_word_guessed(secret_word, correct_guesses):
-            print("Congrats!  You have won the game!")
+        print('\n-----------------------------------------')
+
+        guess = user_input()
+        guessCounter = guess_checker(guess, secret_word, guessCounter)
+        win = win_checker(secret_word)
+
+        if win == False:
+            print(
+                Fore.RED + f'\nYou lost! The word was: {secret_word}' + Fore.RESET)
+            play_again()
             break
-
-        # Check to see if their incorrect guesses is at 0
-        if incorrect_guesses == 0:
-            print("You lost the game.. Sorry about that")
-            print("The answer was: {}".format(secret_word))
+        elif win == True:
+            print(
+                Fore.GREEN + f'\nYou won! The word was: {secret_word}' + Fore.RESET)
+            play_again()
             break
-
-        # Get user input
-        letter = input("Enter a letter: ")
-
-        # If the length of the the input is not 1 then it asks the user to try a new input
-        if len(letter) != 1:
-            print("Your input needs to be only one character, please try again")
-            continue
-
-        # Check to make sure that their input is only a letter
-        if not letter.isalpha():
-            print("Your input needs to be a letter of the alphabet, please try again")
-            continue
-
-        # If the letter is not in unused_letters (aka they have typed it before) then it asks them for a new input
-        if letter not in unused_letters:
-            print("You have already tried that input, please try again")
-            continue
-
-        # Remove the guessed letter from unused_letters and then make a remaining letters list for the user to see before any guess.
-        unused_letters.remove(letter)
-        remaining_letters = ','.join(unused_letters)
-
-        # Check if the guess was correct or not
-        if is_guess_in_word(letter, secret_word):
-            # Add the letter to the correct guesses
-            correct_guesses.append(letter)
-
-            # Sets the secret word to a random word that contains the same 'characters' in the same spot.  This is for sinister spaceman
-            secret_word = random.choice(get_new_word(
-                get_guessed_word(secret_word, correct_guesses)))
-
-            # Gets the new word with spots blanked out for things that they have not guessed so that it can be returned
-            new_word = get_guessed_word(secret_word, correct_guesses)
-            # Print information and where they are at in the game
-            print("Your guess appears in the word!")
-            print("Guessed word so far: {}".format(new_word))
-            print("These letters you haven't guessed yet:  {}".format(
-                remaining_letters))
-        else:
-            # Get the letters that they have so far
-            guessed_word = get_guessed_word(secret_word, correct_guesses)
-
-            # Remove one off of the incorrect guess counter
-            incorrect_guesses -= 1
-
-            # Print information and where they are at in the game
-            print("Sorry, your guess was not in the word, try again")
-            print("You have {} incorrect guesses left".format(
-                incorrect_guesses))
-            print("Guessed word so far: {}".format(guessed_word))
-            print("These letters you haven't guessed yet:  {}".format(
-                remaining_letters))
-
-
 # These function calls that will start the game
-running = True
-while running:
-    spaceman(load_word())
-    running = play_again()
+if __name__ == '__main__':
+    running = True
+    while running:
+        spaceman(load_word())
+        running = play_again()
