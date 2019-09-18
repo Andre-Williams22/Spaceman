@@ -10,13 +10,17 @@ def load_word():
     Returns:
            string: The secret word to be used in the spaceman guessing game
     '''
-    f = open('wordstext.txt', 'r')
-    words_list = f.read().split(' ')
+    f = open('./words.txt', 'r')
+    words_list = f.readlines()
     f.close()
 
+    words_list = words_list[0].split(' ')
     secret_word = random.choice(words_list)
     return secret_word
 
+
+correct_list = []
+incorrect_list = []
 
 def get_new_word(current_word):
     # Open the file again as we are going to get a new word from the list
