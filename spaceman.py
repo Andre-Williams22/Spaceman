@@ -22,6 +22,38 @@ def load_word():
 correct_list = []
 incorrect_list = []
 
+
+def user_input():
+    while True:
+        guess = input('Guess a letter: ').lower()
+        if len(guess) <= 1 and guess.isalpha():
+            if re.match(r'^[a-zA-Z]*$', guess):
+                return guess
+        else:
+            print(Fore.RED + 'Please use single letters only.' + Fore.RESET)
+
+def guess_checker(guess, secret_word, guessCounter):
+    print('\n------------------------------------------')
+    if guess in correct_list:
+        print(Fore.GREEN +
+              'You already guessed that letter correctly!' + Fore.RESET)
+    elif guess in incorrect_list:
+        print(Fore.RED +
+              'You have already guessed that letter.' + Fore.RESET)
+    elif guess in secret_word:
+        correct_list.append(guess)
+        print('You guessed a letter' +
+              Fore.GREEN + ' correctly!' + Fore.RESET)
+    else:
+        incorrect_list.append(guess)
+        guessCounter -= 1
+        print('You guessed' + Fore.RED + ' incorrectly!' + Fore.RESET +
+              '\nGuesses left: ' + Fore.YELLOW + str(guessCounter) + Fore.RESET)
+
+    return guessCounter
+
+
+
 def get_new_word(current_word):
     # Open the file again as we are going to get a new word from the list
     with open('wordstext.txt', 'r') as f:
