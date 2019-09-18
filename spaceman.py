@@ -60,6 +60,22 @@ def win_checker(secret_word):
             return 'Player hasn\'t won yet'
     return True
 
+def play_again():
+    playagain = input('Want to play to play again? (yes/no): ')
+    if playagain.lower() == "yes":
+        os.system('clear')
+        print(Fore.CYAN + 'Thanks for playing again!' + Fore.RESET)
+
+        correct_list.clear()
+        incorrect_list.clear()
+        spaceman(load_word())
+
+        return True
+
+    else:
+        os.system('clear')
+        print('Thanks for playing!')
+        return False
 
 def get_new_word(current_word):
     # Open the file again as we are going to get a new word from the list
