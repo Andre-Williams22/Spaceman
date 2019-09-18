@@ -52,6 +52,13 @@ def guess_checker(guess, secret_word, guessCounter):
 
     return guessCounter
 
+def win_checker(secret_word):
+    if len(incorrect_list) >= 7:
+        return False
+    for i in secret_word:
+        if i not in correct_list:
+            return 'Player hasn\'t won yet'
+    return True
 
 
 def get_new_word(current_word):
