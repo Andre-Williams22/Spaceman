@@ -10,7 +10,7 @@ def load_word():
     Returns:
            string: The secret word to be used in the spaceman guessing game
     '''
-    f = open('./words.txt', 'r')
+    f = open('./wordstext.txt', 'r')
     words_list = f.readlines()
     f.close()
 
@@ -61,8 +61,8 @@ def win_checker(secret_word):
     return True
 
 def play_again():
-    playagain = input('Want to play to play again? (yes/no): ')
-    if playagain.lower() == "yes":
+    playagain = input('Want to play to play again? (y/n): ')
+    if playagain.lower() == "y":
         os.system('clear')
         print(Fore.CYAN + 'Thanks for playing again!' + Fore.RESET)
 
@@ -97,7 +97,7 @@ def spaceman(secret_word):
             print(i, end=' ')
 
         print('\n-----------------------------------------')
-
+        
         guess = user_input()
         guessCounter = guess_checker(guess, secret_word, guessCounter)
         win = win_checker(secret_word)
